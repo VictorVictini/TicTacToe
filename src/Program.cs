@@ -1,11 +1,4 @@
-﻿/*
-    - added enums
-    - added clarity to messages
-    - created reset function for repeated operations
-    - uses 1D array instead of 2D array now
-    - restructured files
-*/
-namespace TicTacToe {
+﻿namespace TicTacToe {
     public class Program {
         // caching the data structure to reuse
         static Random rnd = new Random();
