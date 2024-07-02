@@ -58,21 +58,7 @@
                 DisplayBoard(board);
 
                 // check if player won
-                if (
-                    // horizontal win
-                    (board[0] == MoveState.Player && board[1] == MoveState.Player && board[2] == MoveState.Player) ||
-                    (board[3] == MoveState.Player && board[4] == MoveState.Player && board[5] == MoveState.Player) ||
-                    (board[6] == MoveState.Player && board[7] == MoveState.Player && board[8] == MoveState.Player) ||
-
-                    // diagonal wins
-                    (board[0] == MoveState.Player && board[4] == MoveState.Player && board[8] == MoveState.Player) ||
-                    (board[2] == MoveState.Player && board[4] == MoveState.Player && board[6] == MoveState.Player) ||
-
-                    // vertical wins
-                    (board[0] == MoveState.Player && board[3] == MoveState.Player && board[6] == MoveState.Player) ||
-                    (board[1] == MoveState.Player && board[4] == MoveState.Player && board[7] == MoveState.Player) ||
-                    (board[2] == MoveState.Player && board[5] == MoveState.Player && board[8] == MoveState.Player)
-                ) {
+                if (HasWon(board, MoveState.Player)) {
                     Console.WriteLine("Congrats! You won!");
 
                     // reset the game state
@@ -103,21 +89,7 @@
                 DisplayBoard(board);
 
                 // if the bot won
-                if (
-                    // horizontal win
-                    (board[0] == MoveState.Bot && board[1] == MoveState.Bot && board[2] == MoveState.Bot) ||
-                    (board[3] == MoveState.Bot && board[4] == MoveState.Bot && board[5] == MoveState.Bot) ||
-                    (board[6] == MoveState.Bot && board[7] == MoveState.Bot && board[8] == MoveState.Bot) ||
-
-                    // diagonal wins
-                    (board[0] == MoveState.Bot && board[4] == MoveState.Bot && board[8] == MoveState.Bot) ||
-                    (board[2] == MoveState.Bot && board[4] == MoveState.Bot && board[6] == MoveState.Bot) ||
-
-                    // vertical wins
-                    (board[0] == MoveState.Bot && board[3] == MoveState.Bot && board[6] == MoveState.Bot) ||
-                    (board[1] == MoveState.Bot && board[4] == MoveState.Bot && board[7] == MoveState.Bot) ||
-                    (board[2] == MoveState.Bot && board[5] == MoveState.Bot && board[8] == MoveState.Bot)
-                ) {
+                if (HasWon(board, MoveState.Bot)) {
                     Console.WriteLine("Bzz! You lost!");
 
                     // reset the game state
@@ -164,6 +136,22 @@
                 posLeft.Add(i);
                 board[i] = MoveState.Unused;
             }
-        } 
+        }
+        // determines if the given player/bot has won
+        private static bool HasWon(MoveState[] board, MoveState player) {
+            return  // horizontal win
+                    (board[0] == player && board[1] == player && board[2] == player) ||
+                    (board[3] == player && board[4] == player && board[5] == player) ||
+                    (board[6] == player && board[7] == player && board[8] == player) ||
+
+                    // diagonal wins
+                    (board[0] == player && board[4] == player && board[8] == player) ||
+                    (board[2] == player && board[4] == player && board[6] == player) ||
+
+                    // vertical wins
+                    (board[0] == player && board[3] == player && board[6] == player) ||
+                    (board[1] == player && board[4] == player && board[7] == player) ||
+                    (board[2] == player && board[5] == player && board[8] == player);
+        }
     }
 }
