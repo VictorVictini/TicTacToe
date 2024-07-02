@@ -2,7 +2,7 @@
     public class Program {
         // caching the data structure to reuse
         static Random rnd = new Random();
-        
+        static List<int> posLeft = new List<int>();
 
         // program runs from here
         private static void Main() {
@@ -51,27 +51,14 @@
 
                 // visiting the grid position
                 board[num - 1] = MoveState.Player;
+                posLeft.Remove(num - 1);
 
                 // displays game state after your move
                 Console.WriteLine("After your move, the game state is:");
                 DisplayBoard(board);
 
                 // check if player won
-                if (
-                    // horizontal win
-                    (board[0] == MoveState.Player && board[1] == MoveState.Player && board[2] == MoveState.Player) ||
-                    (board[3] == MoveState.Player && board[4] == MoveState.Player && board[5] == MoveState.Player) ||
-                    (board[6] == MoveState.Player && board[7] == MoveState.Player && board[8] == MoveState.Player) ||
-
-                    // diagonal wins
-                    (board[0] == MoveState.Player && board[4] == MoveState.Player && board[8] == MoveState.Player) ||
-                    (board[2] == MoveState.Player && board[4] == MoveState.Player && board[6] == MoveState.Player) ||
-
-                    // vertical wins
-                    (board[0] == MoveState.Player && board[3] == MoveState.Player && board[6] == MoveState.Player) ||
-                    (board[1] == MoveState.Player && board[4] == MoveState.Player && board[7] == MoveState.Player) ||
-                    (board[2] == MoveState.Player && board[5] == MoveState.Player && board[8] == MoveState.Player)
-                ) {
+                if (HasWon(board, MoveState.Player)) {
                     Console.WriteLine("Congrats! You won!");
 
                     // reset the game state
@@ -81,15 +68,8 @@
                     continue;
                 }
 
-                // create a list of all unvisited grid positions
-                // used to randomly select the position for the bot player
-                List<int> list = new List<int>();
-                for (int i = 0; i < board.Length; i++) {
-                    if (board[i] == MoveState.Unused) list.Add(i);
-                }
-
                 // if there are no unvisited positions left, it is a draw
-                if (list.Count == 0) {
+                if (posLeft.Count == 0) {
                     Console.WriteLine("Game ended in a draw");
 
                     // reset the game state
@@ -100,29 +80,16 @@
                 }
 
                 // set a random unvisited position as visited by the bot player
-                int index = list[rnd.Next(list.Count)];
+                int index = posLeft[rnd.Next(posLeft.Count)];
                 board[index] = MoveState.Bot;
+                posLeft.Remove(index);
 
                 // display game state after bot's turn
                 Console.WriteLine("After the bot's turn, the game is:");
                 DisplayBoard(board);
 
                 // if the bot won
-                if (
-                    // horizontal win
-                    (board[0] == MoveState.Bot && board[1] == MoveState.Bot && board[2] == MoveState.Bot) ||
-                    (board[3] == MoveState.Bot && board[4] == MoveState.Bot && board[5] == MoveState.Bot) ||
-                    (board[6] == MoveState.Bot && board[7] == MoveState.Bot && board[8] == MoveState.Bot) ||
-
-                    // diagonal wins
-                    (board[0] == MoveState.Bot && board[4] == MoveState.Bot && board[8] == MoveState.Bot) ||
-                    (board[2] == MoveState.Bot && board[4] == MoveState.Bot && board[6] == MoveState.Bot) ||
-
-                    // vertical wins
-                    (board[0] == MoveState.Bot && board[3] == MoveState.Bot && board[6] == MoveState.Bot) ||
-                    (board[1] == MoveState.Bot && board[4] == MoveState.Bot && board[7] == MoveState.Bot) ||
-                    (board[2] == MoveState.Bot && board[5] == MoveState.Bot && board[8] == MoveState.Bot)
-                ) {
+                if (HasWon(board, MoveState.Bot)) {
                     Console.WriteLine("Bzz! You lost!");
 
                     // reset the game state
@@ -139,7 +106,11 @@
             // for all board points
             for (int i = 0; i < board.Length; i++) {
                 // output individual board point
-                Console.Write(DisplayPoint(board[i], i));
+                Console.Write(board[i] switch {
+                    MoveState.Player => 'X',
+                    MoveState.Bot    => 'O',
+                    _                => (char)(i + '1'),
+                });
 
                 // every third number, we output a new line instead of pipelines in-between
                 if ((i + 1) % 3 == 0) {
@@ -148,14 +119,6 @@
                     Console.Write(" | ");
                 }
             }
-        }
-
-        // used to display the corresponding player's character
-        // for the spot in the table displayed from DisplayBoard
-        private static char DisplayPoint(MoveState state, int i) {
-            if (state == MoveState.Player) return 'X';
-            if (state == MoveState.Bot) return 'O';
-            return (char)(i + '1');
         }
 
         // retrieving input from console
@@ -168,9 +131,27 @@
 
         // resets game state
         private static void ResetBoard(MoveState[] board) {
+            posLeft.Clear();
             for (int i = 0; i < board.Length; i++) {
+                posLeft.Add(i);
                 board[i] = MoveState.Unused;
             }
-        } 
+        }
+        // determines if the given player/bot has won
+        private static bool HasWon(MoveState[] board, MoveState player) {
+            return  // horizontal win
+                    (board[0] == player && board[1] == player && board[2] == player) ||
+                    (board[3] == player && board[4] == player && board[5] == player) ||
+                    (board[6] == player && board[7] == player && board[8] == player) ||
+
+                    // diagonal wins
+                    (board[0] == player && board[4] == player && board[8] == player) ||
+                    (board[2] == player && board[4] == player && board[6] == player) ||
+
+                    // vertical wins
+                    (board[0] == player && board[3] == player && board[6] == player) ||
+                    (board[1] == player && board[4] == player && board[7] == player) ||
+                    (board[2] == player && board[5] == player && board[8] == player);
+        }
     }
 }
