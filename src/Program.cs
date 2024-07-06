@@ -58,7 +58,7 @@
                 DisplayBoard(board);
 
                 // check if player won
-                if (HasWon(board, MoveState.Player)) {
+                if (HasWon(board)) {
                     Console.WriteLine("Congrats! You won!");
 
                     // reset the game state
@@ -80,7 +80,8 @@
                 }
 
                 // set a random unvisited position as visited by the bot player
-                int index = posLeft[rnd.Next(posLeft.Count)];
+                /*int index = posLeft[rnd.Next(posLeft.Count)];*/
+                int index = CalculateBestMove(board, MoveState.Bot);
                 board[index] = MoveState.Bot;
                 posLeft.Remove(index);
 
@@ -89,7 +90,7 @@
                 DisplayBoard(board);
 
                 // if the bot won
-                if (HasWon(board, MoveState.Bot)) {
+                if (HasWon(board)) {
                     Console.WriteLine("Bzz! You lost!");
 
                     // reset the game state
@@ -137,21 +138,72 @@
                 board[i] = MoveState.Unused;
             }
         }
-        // determines if the given player/bot has won
-        private static bool HasWon(MoveState[] board, MoveState player) {
+        // determines if there is a winning position
+        // context can determine who won, so we do not need to return that
+        private static bool HasWon(MoveState[] board) {
             return  // horizontal win
-                    (board[0] == player && board[1] == player && board[2] == player) ||
-                    (board[3] == player && board[4] == player && board[5] == player) ||
-                    (board[6] == player && board[7] == player && board[8] == player) ||
+                    (board[0] == board[1] && board[1] == board[2] && board[0] != MoveState.Unused) ||
+                    (board[3] == board[4] && board[4] == board[5] && board[3] != MoveState.Unused) ||
+                    (board[6] == board[7] && board[7] == board[8] && board[6] != MoveState.Unused) ||
 
                     // diagonal wins
-                    (board[0] == player && board[4] == player && board[8] == player) ||
-                    (board[2] == player && board[4] == player && board[6] == player) ||
+                    (board[0] == board[4] && board[4] == board[8] && board[0] != MoveState.Unused) ||
+                    (board[2] == board[4] && board[4] == board[6] && board[2] != MoveState.Unused) ||
 
                     // vertical wins
-                    (board[0] == player && board[3] == player && board[6] == player) ||
-                    (board[1] == player && board[4] == player && board[7] == player) ||
-                    (board[2] == player && board[5] == player && board[8] == player);
+                    (board[0] == board[3] && board[3] == board[6] && board[0] != MoveState.Unused) ||
+                    (board[1] == board[4] && board[4] == board[7] && board[1] != MoveState.Unused) ||
+                    (board[2] == board[5] && board[5] == board[8] && board[2] != MoveState.Unused);
+        }
+        // calculates the best move for the given player
+        // mimics one layer of minimax so we can choose the relevant move from it
+        private static int CalculateBestMove(MoveState[] board, MoveState player) {
+            bool[] visited = new bool[board.Length];
+            int bestMoveIndex = -1;
+            int bestMoveEval = Int32.MinValue;
+            for (int i = 0; i < posLeft.Count; i++) {
+                visited[i] = true;
+                int evalMove = MiniMax(board, visited, 0);
+                visited[i] = false;
+                if (evalMove > bestMoveEval) {
+                    bestMoveEval = evalMove;
+                    bestMoveIndex = posLeft[i];
+                }
+            }
+            return bestMoveIndex;
+        }
+        private static int MiniMax(MoveState[] board, bool[] visited, int depth) {
+            // if we won, evaluate current position
+            if (HasWon(board)) {
+                int eval = board.Length + 1 - depth;
+                if (depth % 2 == 1) eval *= -1;
+                return eval;
+            }
+
+            // draw
+            if (depth == visited.Length) return 0;
+
+            // calculate max eval i.e for the player we want to win
+            if (depth % 2 == 1) {
+                int maxEval = Int32.MinValue;
+                for (int i = 0; i < visited.Length; i++) {
+                    if (visited[i]) continue;
+                    visited[i] = true;
+                    maxEval = Math.Max(maxEval, MiniMax(board, visited, depth + 1));
+                    visited[i] = false;
+                }
+                return maxEval;
+            // calculate min eval i.e. for the player we want to lose
+            } else {
+                int minEval = Int32.MaxValue;
+                for (int i = 0; i < visited.Length; i++) {
+                    if (visited[i]) continue;
+                    visited[i] = true;
+                    minEval = Math.Min(minEval, MiniMax(board, visited, depth + 1));
+                    visited[i] = false;
+                }
+                return minEval;
+            }
         }
     }
 }
