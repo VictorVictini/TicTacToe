@@ -28,7 +28,6 @@
 
                 // getting the relevant enum
                 AIChance difficulty = AIChance.Impossible;
-                bool reset = false;
                 switch (input) {
                     case "easy":
                         difficulty = AIChance.Easy;
@@ -44,12 +43,8 @@
                         break;
                     default:
                         Console.WriteLine("Invalid input provided. Please enter \"easy\", \"medium\", \"hard\", or \"impossible\"");
-                        reset = true;
-                        break;
+                        continue;
                 }
-
-                // invalid string provided, try again
-                if (reset) continue;
 
                 // set up a new board and display it
                 Console.WriteLine("Starting game...");
