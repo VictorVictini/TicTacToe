@@ -157,12 +157,13 @@
         }
         // calculates the best move for the given player
         private static int CalculateBestMove(MoveState[] board, MoveState player) {
-            (int index, int _) = MiniMax(board, 0, player, player);
+            (int index, int _) = MiniMax(board, 0, Int32.MinValue, Int32.MaxValue, player, player);
             return index;
         }
 
         // minimax algorithm to choose (and return) the best move for a given board position
-        private static (int, int) MiniMax(MoveState[] board, int depth, MoveState player, MoveState initPlayer) {
+        // with alpha-beta pruning applied
+        private static (int, int) MiniMax(MoveState[] board, int depth, int alpha, int beta, MoveState player, MoveState initPlayer) {
             // if last move won, evaluate current position
             if (HasWon(board)) {
                 // evaluate inversely proportional to depth
@@ -184,32 +185,35 @@
 
             // calculate max eval i.e best move for the player we want to win
             if (player == initPlayer) {
-                int maxEval = Int32.MinValue;
                 int move = -1;
-                for (int i = 0; i < posLeft.Count; i++) {
+
+                // applying alpha-beta pruning such that it stops when beta <= alpha
+                for (int i = 0; i < posLeft.Count && beta > alpha; i++) {
                     // skip if visited
+
                     if (board[posLeft[i]] != MoveState.Unused) continue;
 
                     // set as visited
                     board[posLeft[i]] = player;
 
                     // find max
-                    (int _, int currEval) = MiniMax(board, depth + 1, nextPlayer, initPlayer);
-                    if (currEval > maxEval) {
-                        maxEval = currEval;
+                    (int _, int currEval) = MiniMax(board, depth + 1, alpha, beta, nextPlayer, initPlayer);
+                    if (currEval > alpha) {
+                        alpha = currEval;
                         move = posLeft[i];
                     }
 
                     // set as unvisited
                     board[posLeft[i]] = MoveState.Unused;
                 }
-                return (move, maxEval);
+                return (move, alpha);
 
             // calculate min eval i.e. best move for the player we want to lose
             } else {
-                int minEval = Int32.MaxValue;
                 int move = -1;
-                for (int i = 0; i < posLeft.Count; i++) {
+
+                // applying alpha-beta pruning such that it stops when beta <= alpha
+                for (int i = 0; i < posLeft.Count && beta > alpha; i++) {
                     // skip if visited
                     if (board[posLeft[i]] != MoveState.Unused) continue;
 
@@ -217,16 +221,16 @@
                     board[posLeft[i]] = player;
 
                     // find min
-                    (int _, int currEval) = MiniMax(board, depth + 1, nextPlayer, initPlayer);
-                    if (currEval < minEval) {
-                        minEval = currEval;
+                    (int _, int currEval) = MiniMax(board, depth + 1, alpha, beta, nextPlayer, initPlayer);
+                    if (currEval < beta) {
+                        beta = currEval;
                         move = posLeft[i];
                     }
 
                     // set as unvisited
                     board[posLeft[i]] = MoveState.Unused;
                 }
-                return (move, minEval);
+                return (move, beta);
             }
         }
     }
