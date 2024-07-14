@@ -9,15 +9,13 @@
             // input is what we get from the user
             string input = "";
 
-            // determining difficulty
+            // determining pvp or pve
             while (input != "quit") {
-                // difficulty system
-                // retrieving the input
+                // how many players -- 2 or 1
                 try {
-                    input = RetrieveInput("Enter \"quit\" to end the game. Enter the difficulty: \"Easy\", \"Medium\", \"Hard\", or \"Impossible\"").ToLower();
+                    input = RetrieveInput("Enter \"quit\" to end the game. Enter how many players there will be (2 or 1)").ToLower();
                 } catch (IOException e) {
                     Console.WriteLine(e.Message);
-                    continue;
                 }
 
                 // exiting if needed
@@ -26,126 +24,192 @@
                 // ignoring 'empty' input
                 if (input == "") continue;
 
-                // getting the relevant enum
-                AIChance difficulty = AIChance.Impossible;
-                switch (input) {
-                    case "easy":
-                        difficulty = AIChance.Easy;
-                        break;
-                    case "medium":
-                        difficulty = AIChance.Medium;
-                        break;
-                    case "hard":
-                        difficulty = AIChance.Hard;
-                        break;
-                    case "impossible":
-                        difficulty = AIChance.Impossible;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input provided. Please enter \"easy\", \"medium\", \"hard\", or \"impossible\"");
-                        continue;
+                // standard error handling
+                if (input.Length != 1 || (input[0] != '1' && input[0] != '2')) {
+                    Console.WriteLine("Invalid input provided. Please provided '1' or '2' to indicate how many players there will be.");
+                    continue;
                 }
 
-                // set up a new board and display it
-                Console.WriteLine("Starting game...");
-                MoveState[] board = new MoveState[9]; // 3x3 board = 9 length
-                ResetBoard(board);
-                DisplayBoard(board);
+                
+                // used to track if it's a bot player
+                bool hasBot = input[0] == '1';
 
-                // actual game
-                // runs until "quit" is provided
-                while (true) {
-                    // retrieving the input
-                    try {
-                        input = RetrieveInput("Enter \"quit\" to end the game. Enter the relevant number for the box, to enter the position you would like to play. You are playing as X, the first player.");
-                    } catch (IOException e) {
-                        Console.WriteLine(e.Message);
-                        continue;
+                // determining difficulty
+                while (input != "quit") {
+                    AIChance difficulty = AIChance.Impossible;
+                    if (hasBot) {
+                        // difficulty system
+                        // retrieving the input
+                        try {
+                            input = RetrieveInput("Enter \"quit\" to end the game. Enter the difficulty: \"Easy\", \"Medium\", \"Hard\", or \"Impossible\"").ToLower();
+                        } catch (IOException e) {
+                            Console.WriteLine(e.Message);
+                            continue;
+                        }
+
+                        // exiting if needed
+                        if (input == "quit") break;
+
+                        // ignoring 'empty' input
+                        if (input == "") continue;
+
+                        // getting the relevant enum
+                        switch (input) {
+                            case "easy":
+                                difficulty = AIChance.Easy;
+                                break;
+                            case "medium":
+                                difficulty = AIChance.Medium;
+                                break;
+                            case "hard":
+                                difficulty = AIChance.Hard;
+                                break;
+                            case "impossible":
+                                difficulty = AIChance.Impossible;
+                                break;
+                            default:
+                                Console.WriteLine("Invalid input provided. Please enter \"easy\", \"medium\", \"hard\", or \"impossible\"");
+                                continue;
+                        }
                     }
 
-                    // ends the game if "quit" is provided
-                    if (input.ToLower() == "quit") break;
-
-                    // ignore 'empty' input
-                    if (input == "") continue;
-
-                    // parsing the input to ensure it is a valid number in the given range
-                    int num = 0;
-                    if (!int.TryParse(input, out num)) {
-                        Console.WriteLine("Invalid input provided. Not a number or \"quit\"");
-                        continue;
-                    }
-                    if (num < 1 || num > 9) {
-                        Console.WriteLine("Number outwith range (1-9)");
-                        continue;
-                    }
-
-                    // gets the relevant grid position and checks it's currently unvisited
-                    if (board[num - 1] != MoveState.Unused) {
-                        Console.WriteLine("Invalid position chosen");
-                        continue;
-                    }
-
-                    // visiting the grid position
-                    board[num - 1] = MoveState.Player;
-                    posLeft.Remove(num - 1);
-
-                    // displays game state after your move
-                    Console.WriteLine("After your move, the game state is:");
+                    // set up a new board and display it
+                    Console.WriteLine("Starting game...");
+                    MoveState[] board = new MoveState[9]; // 3x3 board = 9 length
+                    ResetBoard(board);
                     DisplayBoard(board);
 
-                    // check if player won
-                    if (HasWon(board)) {
-                        Console.WriteLine("Congrats! You won!");
+                    // actual game
+                    // runs until "quit" is provided
+                    while (true) {
+                        // retrieving the input
+                        try {
+                            input = RetrieveInput("Enter \"quit\" to end the game. Enter the relevant number for the box, to enter the position you would like to play. You are playing as X, the first player.");
+                        } catch (IOException e) {
+                            Console.WriteLine(e.Message);
+                            continue;
+                        }
 
-                        // reset the game state
-                        Console.WriteLine("Starting new game...");
-                        ResetBoard(board);
+                        // ends the game if "quit" is provided
+                        if (input.ToLower() == "quit") break;
+
+                        // ignore 'empty' input
+                        if (input == "") continue;
+
+                        // parsing the input to ensure it is a valid number in the given range
+                        int num = 0;
+                        if (!int.TryParse(input, out num)) {
+                            Console.WriteLine("Invalid input provided. Not a number or \"quit\"");
+                            continue;
+                        }
+                        if (num < 1 || num > 9) {
+                            Console.WriteLine("Number outwith range (1-9)");
+                            continue;
+                        }
+
+                        // gets the relevant grid position and checks it's currently unvisited
+                        if (board[num - 1] != MoveState.Unused) {
+                            Console.WriteLine("Invalid position chosen");
+                            continue;
+                        }
+
+                        // visiting the grid position
+                        board[num - 1] = MoveState.Player;
+                        posLeft.Remove(num - 1);
+
+                        // displays game state after your move
+                        Console.WriteLine("After the first player's move, the game state is:");
                         DisplayBoard(board);
-                        continue;
-                    }
 
-                    // if there are no unvisited positions left, it is a draw
-                    if (posLeft.Count == 0) {
-                        Console.WriteLine("Game ended in a draw");
+                        // check if player won
+                        if (HasWon(board)) {
+                            Console.WriteLine("The first player has won!");
 
-                        // reset the game state
-                        Console.WriteLine("Starting new game...");
-                        ResetBoard(board);
+                            // reset the game state
+                            Console.WriteLine("Starting new game...");
+                            ResetBoard(board);
+                            DisplayBoard(board);
+                            continue;
+                        }
+
+                        // if there are no unvisited positions left, it is a draw
+                        if (posLeft.Count == 0) {
+                            Console.WriteLine("Game ended in a draw");
+
+                            // reset the game state
+                            Console.WriteLine("Starting new game...");
+                            ResetBoard(board);
+                            DisplayBoard(board);
+                            continue;
+                        }
+
+                        // random number from 1 to 100
+                        int chance = rnd.Next(1, 101);
+
+                        // if it's less than or equal to the associated constant, use AI
+                        int index = -1;
+                        if (hasBot) {
+                            if (chance <= (int)difficulty) {
+                                index = CalculateBestMove(board, MoveState.Bot);
+
+                            // otherwise, guess the move randomly
+                            } else {
+                                index = GuessMove();
+                            }
+                        } else {
+                            // retrieving the input
+                            try {
+                                input = RetrieveInput("Enter \"quit\" to end the game. Enter the relevant number for the box, to enter the position you would like to play. You are playing as O, the second player.");
+                            } catch (IOException e) {
+                                Console.WriteLine(e.Message);
+                                continue;
+                            }
+
+                            // ends the game if "quit" is provided
+                            if (input.ToLower() == "quit") break;
+
+                            // ignore 'empty' input
+                            if (input == "") continue;
+
+                            // parsing the input to ensure it is a valid number in the given range
+                            num = 0;
+                            if (!int.TryParse(input, out num)) {
+                                Console.WriteLine("Invalid input provided. Not a number or \"quit\"");
+                                continue;
+                            }
+                            if (num < 1 || num > 9) {
+                                Console.WriteLine("Number outwith range (1-9)");
+                                continue;
+                            }
+
+                            // gets the relevant grid position and checks it's currently unvisited
+                            if (board[num - 1] != MoveState.Unused) {
+                                Console.WriteLine("Invalid position chosen");
+                                continue;
+                            }
+
+                            // assigning the index
+                            index = num - 1;
+                        }
+
+                        // set it as visited
+                        board[index] = MoveState.Bot;
+                        posLeft.Remove(index);
+
+                        // display game state after bot's turn
+                        Console.WriteLine("After the second player's move, the game is:");
                         DisplayBoard(board);
-                        continue;
-                    }
 
-                    // random number from 1 to 100
-                    int chance = rnd.Next(1, 101);
+                        // if the bot won
+                        if (HasWon(board)) {
+                            Console.WriteLine("The second player has won!");
 
-                    // if it's less than or equal to the associated constant, use AI
-                    int index = -1;
-                    if (chance <= (int)difficulty) {
-                        index = CalculateBestMove(board, MoveState.Bot);
-
-                    // otherwise, guess the move randomly
-                    } else {
-                        index = GuessMove();
-                    }
-
-                    // set it as visited
-                    board[index] = MoveState.Bot;
-                    posLeft.Remove(index);
-
-                    // display game state after bot's turn
-                    Console.WriteLine("After the bot's turn, the game is:");
-                    DisplayBoard(board);
-
-                    // if the bot won
-                    if (HasWon(board)) {
-                        Console.WriteLine("Bzz! You lost!");
-
-                        // reset the game state
-                        Console.WriteLine("Starting new game...");
-                        ResetBoard(board);
-                        DisplayBoard(board);
-                        continue;
+                            // reset the game state
+                            Console.WriteLine("Starting new game...");
+                            ResetBoard(board);
+                            DisplayBoard(board);
+                            continue;
+                        }
                     }
                 }
             }
