@@ -8,6 +8,24 @@ namespace TicTacToe {
             return letter;
         }
 
+        // determines if there is a winning position
+        // context can determine who won, so we do not need to return that
+        public static bool HasWon(MoveState[] board) {
+            return  // horizontal win
+                    (board[0] == board[1] && board[1] == board[2] && board[0] != MoveState.Unused) ||
+                    (board[3] == board[4] && board[4] == board[5] && board[3] != MoveState.Unused) ||
+                    (board[6] == board[7] && board[7] == board[8] && board[6] != MoveState.Unused) ||
+
+                    // diagonal wins
+                    (board[0] == board[4] && board[4] == board[8] && board[0] != MoveState.Unused) ||
+                    (board[2] == board[4] && board[4] == board[6] && board[2] != MoveState.Unused) ||
+
+                    // vertical wins
+                    (board[0] == board[3] && board[3] == board[6] && board[0] != MoveState.Unused) ||
+                    (board[1] == board[4] && board[4] == board[7] && board[1] != MoveState.Unused) ||
+                    (board[2] == board[5] && board[5] == board[8] && board[2] != MoveState.Unused);
+        }
+
         // setter
         public void SetLetter(char letter) {
             this.letter = letter;
