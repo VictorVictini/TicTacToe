@@ -1,4 +1,9 @@
 namespace TicTacToe {
+    public enum MoveState {
+        Unused,
+        Player,
+        Bot
+    };
     enum AIChance {
         Easy = 20,
         Medium = 50,
