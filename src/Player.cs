@@ -8,7 +8,12 @@ namespace TicTacToe {
             return letter;
         }
 
+        // setter
+        public void SetLetter(char letter) {
+            this.letter = letter;
+        }
+
         // player makes a move
-        abstract public void MakeMove();
+        abstract public MoveState[] MakeMove(MoveState[] board);
     }
 }
