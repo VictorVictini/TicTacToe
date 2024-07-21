@@ -59,8 +59,8 @@ namespace TicTacToe {
             for (int i = 0; i < board.Length; i++) {
                 // output individual board point
                 Console.Write(board[i] switch {
-                    MoveState.Player => 'X',
-                    MoveState.Bot    => 'O',
+                    MoveState.First  => 'X',
+                    MoveState.Second => 'O',
                     _                => (char)(i + '1'),
                 });
 
