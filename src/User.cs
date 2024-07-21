@@ -3,6 +3,10 @@ namespace TicTacToe {
         public User(MoveState player) {
             this.SetPlayer(player);
         }
+        public override void ResetState() {
+            // nothing to reset here, included for completeness
+            return;
+        }
 
         public override MoveState[] MakeMove(MoveState[] board) {
             int move = -1;

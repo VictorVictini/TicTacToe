@@ -33,5 +33,6 @@ namespace TicTacToe {
 
         // player makes a move
         abstract public MoveState[] MakeMove(MoveState[] board);
+        abstract public void ResetState();
     }
 }
