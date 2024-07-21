@@ -37,7 +37,7 @@ namespace TicTacToe {
         }
         // resetting everything
         public override void ResetState() {
-            posLeft = Enumerable.Range(1, 9).ToList();
+            posLeft = Enumerable.Range(0, 9).ToList();
         }
 
         // making the move
