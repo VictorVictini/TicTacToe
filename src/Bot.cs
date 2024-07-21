@@ -3,14 +3,12 @@ namespace TicTacToe {
         private static AIChance difficulty;
 
         // for caching
-        private Random rnd;
-        private List<int> posLeft;
+        private static Random rnd = new Random();
+        private static List<int> posLeft = new List<int>();
 
         // constructor
-        public Bot(char letter) {
-            this.SetLetter(letter);
-            this.rnd = new Random();
-            this.posLeft = new List<int>();
+        public Bot(MoveState player) {
+            this.SetPlayer(player);
 
             // creating UI for making the chances
             HashSet<string> choices = new HashSet<string>{"easy", "medium", "hard", "impossible"};
@@ -45,7 +43,7 @@ namespace TicTacToe {
             // if it's less than or equal to the associated constant, use AI
             int index = -1;
             if (chance <= (int)difficulty) {
-                (index, int _) = MiniMax(board, 0, Int32.MinValue, Int32.MaxValue, player, player);
+                (index, int _) = MiniMax(board, 0, Int32.MinValue, Int32.MaxValue, this.GetPlayer(), this.GetPlayer());
 
             // otherwise, guess the move randomly
             } else {
@@ -53,7 +51,7 @@ namespace TicTacToe {
             }
 
             // applying the move
-            board[index] = MoveState.Bot;
+            board[index] = this.GetPlayer();
             posLeft.Remove(index);
 
             return board;
@@ -78,8 +76,8 @@ namespace TicTacToe {
             if (depth == posLeft.Count) return (-1, 0);
 
             // determine who is the next player
-            MoveState nextPlayer = MoveState.Player;
-            if (player == MoveState.Player) nextPlayer = MoveState.Bot;
+            MoveState nextPlayer = MoveState.First;
+            if (player == MoveState.First) nextPlayer = MoveState.Second;
 
             // calculate max eval i.e best move for the player we want to win
             if (player == initPlayer) {
