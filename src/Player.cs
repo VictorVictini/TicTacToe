@@ -2,15 +2,19 @@ namespace TicTacToe {
     abstract class Player {
         // letter to indicate which player's move it is
         private MoveState player;
+        private char letter;
 
         // getter
+        public char GetLetter() {
+            return letter;
+        }
         public MoveState GetPlayer() {
             return player;
         }
 
         // determines if there is a winning position
         // context can determine who won, so we do not need to return that
-        public static bool HasWon(MoveState[] board) {
+        public bool HasWon(MoveState[] board) {
             return  // horizontal win
                     (board[0] == board[1] && board[1] == board[2] && board[0] != MoveState.Unused) ||
                     (board[3] == board[4] && board[4] == board[5] && board[3] != MoveState.Unused) ||
@@ -27,6 +31,9 @@ namespace TicTacToe {
         }
 
         // setters
+        public void SetLetter(char letter) {
+            this.letter = letter;
+        }
         public void SetPlayer(MoveState player) {
             this.player = player;
         }

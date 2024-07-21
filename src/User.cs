@@ -1,7 +1,8 @@
 namespace TicTacToe {
     class User : Player {
-        public User(MoveState player) {
+        public User(MoveState player, char letter) {
             this.SetPlayer(player);
+            this.SetLetter(letter);
         }
         public override void ResetState() {
             // nothing to reset here, included for completeness

@@ -7,8 +7,9 @@ namespace TicTacToe {
         private static List<int> posLeft = new List<int>();
 
         // constructor
-        public Bot(MoveState player) {
+        public Bot(MoveState player, char letter) {
             this.SetPlayer(player);
+            this.SetLetter(letter);
 
             // creating UI for making the chances
             HashSet<string> choices = new HashSet<string>{"easy", "medium", "hard", "impossible"};
@@ -63,7 +64,7 @@ namespace TicTacToe {
 
         // minimax algorithm to choose (and return) the best move for a given board position
         // with alpha-beta pruning applied
-        private static (int, int) MiniMax(MoveState[] board, int depth, int alpha, int beta, MoveState player, MoveState initPlayer) {
+        private (int, int) MiniMax(MoveState[] board, int depth, int alpha, int beta, MoveState player, MoveState initPlayer) {
             // if last move won, evaluate current position
             if (HasWon(board)) {
                 // evaluate inversely proportional to depth
