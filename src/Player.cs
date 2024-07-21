@@ -1,11 +1,11 @@
 namespace TicTacToe {
     abstract class Player {
         // letter to indicate which player's move it is
-        private char letter;
+        private MoveState player;
 
         // getter
-        public char GetLetter() {
-            return letter;
+        public MoveState GetPlayer() {
+            return player;
         }
 
         // determines if there is a winning position
@@ -26,9 +26,9 @@ namespace TicTacToe {
                     (board[2] == board[5] && board[5] == board[8] && board[2] != MoveState.Unused);
         }
 
-        // setter
-        public void SetLetter(char letter) {
-            this.letter = letter;
+        // setters
+        public void SetPlayer(MoveState player) {
+            this.player = player;
         }
 
         // player makes a move
