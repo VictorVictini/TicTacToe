@@ -3,6 +3,7 @@ namespace TicTacToe {
         // letter to indicate which player's move it is
         private MoveState player;
         private char letter;
+        private List<int> posLeft;
 
         // getter
         public char GetLetter() {
@@ -10,6 +11,9 @@ namespace TicTacToe {
         }
         public MoveState GetPlayer() {
             return player;
+        }
+        public List<int> GetPosLeft() {
+            return posLeft;
         }
 
         // determines if there is a winning position
@@ -37,9 +41,11 @@ namespace TicTacToe {
         public void SetPlayer(MoveState player) {
             this.player = player;
         }
+        public void SetPosLeft(List<int> posLeft) {
+            this.posLeft = posLeft;
+        }
 
         // player makes a move
         abstract public MoveState[] MakeMove(MoveState[] board);
-        abstract public void ResetState();
     }
 }

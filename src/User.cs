@@ -4,10 +4,6 @@ namespace TicTacToe {
             this.SetPlayer(player);
             this.SetLetter(letter);
         }
-        public override void ResetState() {
-            // nothing to reset here, included for completeness
-            return;
-        }
 
         public override MoveState[] MakeMove(MoveState[] board) {
             int move = -1;
@@ -22,6 +18,7 @@ namespace TicTacToe {
             }
 
             board[move - 1] = this.GetPlayer();
+            GetPosLeft().Remove(move - 1);
             return board;
         }
     }

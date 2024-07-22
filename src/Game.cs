@@ -3,6 +3,7 @@ namespace TicTacToe {
         private Player[] players;
         private int turn;
         private MoveState[] board;
+        private List<int> posLeft;
         public Game(Player first, Player second) {
             // make custom exceptions later
             if (first == second) throw new Exception("Why?");
@@ -30,8 +31,9 @@ namespace TicTacToe {
         private void Reset() {
             turn = 0;
             board = new MoveState[9];
+            posLeft = Enumerable.Range(0, 9).ToList();
             foreach (Player player in players) {
-                player.ResetState();
+                player.SetPosLeft(posLeft);
             }
         }
     }

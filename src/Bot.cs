@@ -4,7 +4,6 @@ namespace TicTacToe {
 
         // for caching
         private static Random rnd = new Random();
-        private static List<int> posLeft = new List<int>();
 
         // constructor
         public Bot(MoveState player, char letter) {
@@ -35,10 +34,6 @@ namespace TicTacToe {
                     break;
             }
         }
-        // resetting everything
-        public override void ResetState() {
-            posLeft = Enumerable.Range(0, 9).ToList();
-        }
 
         // making the move
         public override MoveState[] MakeMove(MoveState[] board) {
@@ -52,12 +47,12 @@ namespace TicTacToe {
 
             // otherwise, guess the move randomly
             } else {
-                index = posLeft[rnd.Next(posLeft.Count)];
+                index = GetPosLeft()[rnd.Next(GetPosLeft().Count)];
             }
 
             // applying the move
             board[index] = this.GetPlayer();
-            posLeft.Remove(index);
+            GetPosLeft().Remove(index);
 
             return board;
         }
@@ -69,7 +64,7 @@ namespace TicTacToe {
             if (HasWon(board)) {
                 // evaluate inversely proportional to depth
                 // i.e. higher depth -> lower eval, lower depth -> higher eval
-                int eval = posLeft.Count + 1 - depth;
+                int eval = GetPosLeft().Count + 1 - depth;
 
                 // if the current player is the initial player,
                 // it means the last move was played by the opponent so we must evaluate it negatively
@@ -78,7 +73,7 @@ namespace TicTacToe {
             }
 
             // draw
-            if (depth == posLeft.Count) return (-1, 0);
+            if (depth == GetPosLeft().Count) return (-1, 0);
 
             // determine who is the next player
             MoveState nextPlayer = MoveState.First;
@@ -89,23 +84,23 @@ namespace TicTacToe {
                 int move = -1;
 
                 // applying alpha-beta pruning such that it stops when beta <= alpha
-                for (int i = 0; i < posLeft.Count && beta > alpha; i++) {
+                for (int i = 0; i < GetPosLeft().Count && beta > alpha; i++) {
                     // skip if visited
 
-                    if (board[posLeft[i]] != MoveState.Unused) continue;
+                    if (board[GetPosLeft()[i]] != MoveState.Unused) continue;
 
                     // set as visited
-                    board[posLeft[i]] = player;
+                    board[GetPosLeft()[i]] = player;
 
                     // find max
                     (int _, int currEval) = MiniMax(board, depth + 1, alpha, beta, nextPlayer, initPlayer);
                     if (currEval > alpha) {
                         alpha = currEval;
-                        move = posLeft[i];
+                        move = GetPosLeft()[i];
                     }
 
                     // set as unvisited
-                    board[posLeft[i]] = MoveState.Unused;
+                    board[GetPosLeft()[i]] = MoveState.Unused;
                 }
                 return (move, alpha);
 
@@ -114,22 +109,22 @@ namespace TicTacToe {
                 int move = -1;
 
                 // applying alpha-beta pruning such that it stops when beta <= alpha
-                for (int i = 0; i < posLeft.Count && beta > alpha; i++) {
+                for (int i = 0; i < GetPosLeft().Count && beta > alpha; i++) {
                     // skip if visited
-                    if (board[posLeft[i]] != MoveState.Unused) continue;
+                    if (board[GetPosLeft()[i]] != MoveState.Unused) continue;
 
                     // set as visited
-                    board[posLeft[i]] = player;
+                    board[GetPosLeft()[i]] = player;
 
                     // find min
                     (int _, int currEval) = MiniMax(board, depth + 1, alpha, beta, nextPlayer, initPlayer);
                     if (currEval < beta) {
                         beta = currEval;
-                        move = posLeft[i];
+                        move = GetPosLeft()[i];
                     }
 
                     // set as unvisited
-                    board[posLeft[i]] = MoveState.Unused;
+                    board[GetPosLeft()[i]] = MoveState.Unused;
                 }
                 return (move, beta);
             }
