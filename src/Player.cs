@@ -4,6 +4,9 @@ namespace TicTacToe {
         private MoveState player;
         private char letter;
         private List<int> posLeft;
+        public Player() {
+            posLeft = new List<int>();
+        }
 
         // getter
         public char GetLetter() {

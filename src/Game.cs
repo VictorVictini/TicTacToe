@@ -10,6 +10,7 @@ namespace TicTacToe {
             players = new Player[]{first, second};
             turn = 0;
             board = new MoveState[9];
+            posLeft = new List<int>();
         }
         public void Play() {
             Reset();
