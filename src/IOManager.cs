@@ -9,6 +9,8 @@ namespace TicTacToe {
                 Console.Write("> ");
                 input = Console.ReadLine() ?? throw new IOException("Invalid input provided");
             }
+            input = input.ToLower();
+            if (input == "quit") throw new QuitGameException("Exiting program...");
             return input.ToLower();
         }
 
