@@ -6,7 +6,7 @@ namespace TicTacToe {
         private List<int> posLeft;
         public Game(Player first, Player second) {
             // make custom exceptions later
-            if (first == second) throw new Exception("Why?");
+            if (first == second) throw new EqualPlayerObjectException("Player objects passed to Game constructor reference the same memory location. They should be unrelated.");
             players = new Player[]{first, second};
             turn = 0;
             board = new MoveState[9];

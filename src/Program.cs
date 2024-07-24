@@ -27,7 +27,13 @@
                 secondPlayer = new User(MoveState.Second, 'O');
             }
 
-            Game game = new Game(firstPlayer, secondPlayer);
+            Game game;
+            try {
+                game = new Game(firstPlayer, secondPlayer);
+            } catch (EqualPlayerObjectException exception) {
+                Console.WriteLine(exception.Message);
+                return;
+            }
             while (true) {
                 Console.WriteLine("Starting new game...");
                 try {
