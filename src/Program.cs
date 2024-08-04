@@ -25,6 +25,8 @@
                 } catch (QuitGameException exception) {
                     Console.WriteLine(exception.Message);
                     return;
+
+                // exception that shouldn't execute
                 } catch (UnexpectedEnumValueException exception) {
                     Console.WriteLine(exception.Message);
                     return;
