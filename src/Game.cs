@@ -7,7 +7,7 @@ namespace TicTacToe {
         public Game(Player first, Player second) {
             // make custom exceptions later
             if (first == second) throw new EqualPlayerObjectException("Player objects passed to Game constructor reference the same memory location. They should be unrelated.");
-            if (first.GetPlayer() == second.GetPlayer()) throw new EqualPlayerMoveState("Players cannot have the same move states.");
+            if (first.GetPlayer() == second.GetPlayer()) throw new EqualPlayerMoveStateException("Players cannot have the same move states.");
             players = new Player[]{first, second};
             turn = 0;
             board = new MoveState[9];

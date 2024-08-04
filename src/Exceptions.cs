@@ -5,7 +5,7 @@ namespace TicTacToe {
     public class EqualPlayerObjectException : Exception {
         public EqualPlayerObjectException(string msg) : base(msg) { /* empty body */ }
     }
-    public class EqualPlayerMoveState : Exception {
-        public EqualPlayerMoveState(string msg) : base(msg) { /* empty body */ }
+    public class EqualPlayerMoveStateException : Exception {
+        public EqualPlayerMoveStateException(string msg) : base(msg) { /* empty body */ }
     }
 }
