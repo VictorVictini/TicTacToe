@@ -1,8 +1,5 @@
 namespace TicTacToe {
     abstract class Player {
-        // letter to indicate which player's move it is
-        private char letter;
-
         // what the player's designated enum on the board is
         private MoveState player;
 
@@ -15,11 +12,11 @@ namespace TicTacToe {
         }
 
         // getters
-        public char GetLetter() {
-            return letter;
-        }
         public MoveState GetPlayer() {
             return player;
+        }
+        public char GetLetter() {
+            return Constants.moveChar[player];
         }
 
         // determines if there is a winning position
@@ -41,9 +38,6 @@ namespace TicTacToe {
         }
 
         // setters
-        public void SetLetter(char letter) {
-            this.letter = letter;
-        }
         public void SetPlayer(MoveState player) {
             this.player = player;
         }

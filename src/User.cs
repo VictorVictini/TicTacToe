@@ -1,9 +1,8 @@
 namespace TicTacToe {
     class User : Player {
         // basic constructor
-        public User(MoveState player, char letter) {
+        public User(MoveState player) {
             this.SetPlayer(player);
-            this.SetLetter(letter);
         }
 
         // user makes a move

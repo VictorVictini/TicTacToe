@@ -13,13 +13,13 @@
             }
 
             // first player is human
-            Player firstPlayer = new User(MoveState.First, 'X');
+            Player firstPlayer = new User(MoveState.First);
 
             // if 1 player, the second is a bot
             Player secondPlayer;
             if (num == 1) {
                 try {
-                    secondPlayer = new Bot(MoveState.Second, 'O');
+                    secondPlayer = new Bot(MoveState.Second);
 
                 // quit the game
                 } catch (QuitGameException exception) {
@@ -32,7 +32,7 @@
             
             // otherwise, it's a human
             } else {
-                secondPlayer = new User(MoveState.Second, 'O');
+                secondPlayer = new User(MoveState.Second);
             }
 
             // create the game with both players

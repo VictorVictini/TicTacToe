@@ -73,14 +73,14 @@ namespace TicTacToe {
             // for all board points
             for (int i = 0; i < board.Length; i++) {
                 // output individual board point
-                Console.Write(board[i] switch {
-                    MoveState.First  => 'X',
-                    MoveState.Second => 'O',
-                    _                => (char)(i + '1'),
-                });
+                if (board[i] == MoveState.Unused) {
+                    Console.Write((char)(i + '1'));
+                } else {
+                    Console.Write(Constants.moveChar[board[i]]);
+                }
 
                 // every third number, we output a new line instead of pipelines in-between
-                if ((i + 1) % 3 == 0) {
+                if ((i + 1) % Constants.BoardLength == 0) {
                     Console.WriteLine();
                 } else {
                     Console.Write(" | ");

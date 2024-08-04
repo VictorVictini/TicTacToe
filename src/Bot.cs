@@ -8,9 +8,8 @@ namespace TicTacToe {
         private static Random rnd = new Random();
 
         // constructor
-        public Bot(MoveState player, char letter) {
+        public Bot(MoveState player) {
             this.SetPlayer(player);
-            this.SetLetter(letter);
 
             // creating UI for making the chances
             HashSet<string> choices = new HashSet<string>{"easy", "medium", "hard", "impossible"};

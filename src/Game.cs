@@ -15,7 +15,7 @@ namespace TicTacToe {
 
             // initialising data and providing both players
             players = new Player[]{first, second};
-            board = new MoveState[9];
+            board = new MoveState[Constants.BoardHeight * Constants.BoardLength];
             posLeft = new List<int>();
         }
         public void Play() {
@@ -60,8 +60,8 @@ namespace TicTacToe {
         // resets all properties of the game
         // and links them (as needed) to the players
         private void Reset() {
-            board = new MoveState[9];
-            posLeft = Enumerable.Range(0, 9).ToList();
+            board = new MoveState[Constants.BoardLength * Constants.BoardHeight];
+            posLeft = Enumerable.Range(0, board.Length).ToList();
             foreach (Player player in players) {
                 player.SetPosLeft(posLeft);
             }
