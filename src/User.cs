@@ -9,7 +9,7 @@ namespace TicTacToe {
             int move = -1;
             bool found = false;
             while (!found) {
-                move = IOManager.RetrieveNum("Enter \"quit\" to end the game. Enter the relevant number for the box, to enter the position you would like to play. You are playing as X, the first player.", 1, board.Length);
+                move = IOManager.RetrieveNum("Enter the relevant number for the box, to enter the position you would like to play. You are playing as " + this.GetLetter() + ".", 1, board.Length);
                 if (board[move - 1] != MoveState.Unused) {
                     Console.WriteLine("Board position selected is currently occupied.");
                 } else {

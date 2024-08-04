@@ -12,7 +12,7 @@ namespace TicTacToe {
 
             // creating UI for making the chances
             HashSet<string> choices = new HashSet<string>{"easy", "medium", "hard", "impossible"};
-            string choice = IOManager.RestrictedChoice("Enter \"quit\" to end the game. Enter the difficulty: \"Easy\", \"Medium\", \"Hard\", or \"Impossible\"", choices);
+            string choice = IOManager.RestrictedChoice("Enter the difficulty", choices);
 
             // getting the relevant difficulty set up
             switch (choice) {

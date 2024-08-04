@@ -5,7 +5,7 @@
             // how many players -- 2 or 1
             int num = 0;
             try {
-                num = IOManager.RetrieveNum("Enter \"quit\" to end the game. Enter how many players there will be (2 or 1)", 1, 2);
+                num = IOManager.RetrieveNum("Enter how many players there will be (2 or 1)", 1, 2);
             } catch (QuitGameException exception) {
                 Console.WriteLine(exception.Message);
                 return;
