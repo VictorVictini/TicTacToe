@@ -3,7 +3,7 @@ namespace TicTacToe {
 
         // retrieving input from console
         private static string RetrieveInput(string msg) {
-            Console.WriteLine(msg);
+            Console.WriteLine("Enter \"quit\" to end the game. {0}", msg);
             string input = "";
             while (input == "") {
                 Console.Write("> ");
@@ -18,7 +18,8 @@ namespace TicTacToe {
         public static int RetrieveNum(string msg, int start, int end) {
             // repeat until valid number provided
             int num = Int32.MinValue;
-            while (num == Int32.MinValue) {
+            bool found = false;
+            while (!found) {
                 // get input from console
                 string input = RetrieveInput(msg);
 
@@ -29,9 +30,9 @@ namespace TicTacToe {
                 }
                 if (num < start || num > end) {
                     Console.WriteLine("Number outwith range ({0}-{1})", start, end);
-                    num = Int32.MinValue;
                     continue;
                 }
+                found = true;
             }
             return num;
         }
@@ -41,7 +42,7 @@ namespace TicTacToe {
         public static string RestrictedChoice(string msg, HashSet<string> choices) {
             string res = "";
             while (res == "") {
-                string input = RetrieveInput(msg);
+                string input = RetrieveInput(msg + ": " + String.Join(", ", choices));
 
                 // setting the result if valid
                 if (choices.Contains(input)) {
