@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace TicTacToe {
+﻿namespace TicTacToe {
     public class Program {
         // program runs from here
         private static void Main() {
