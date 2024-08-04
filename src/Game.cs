@@ -1,38 +1,65 @@
 namespace TicTacToe {
     class Game {
+        // both players in the game
         private Player[] players;
-        private int turn;
+
+        // the current board state
         private MoveState[] board;
+
+        // the unfilled positions left
         private List<int> posLeft;
         public Game(Player first, Player second) {
-            // make custom exceptions later
+            // exceptions in case invalid data is provided
             if (first == second) throw new EqualPlayerObjectException("Player objects passed to Game constructor reference the same memory location. They should be unrelated.");
             if (first.GetPlayer() == second.GetPlayer()) throw new EqualPlayerMoveStateException("Players cannot have the same move states.");
+
+            // initialising data and providing both players
             players = new Player[]{first, second};
-            turn = 0;
             board = new MoveState[9];
             posLeft = new List<int>();
         }
         public void Play() {
+            // reset everything
             Reset();
+
+            // play the game until it ends
             int movesPlayed = 0;
             while (movesPlayed < board.Length) {
+                // output current board state
                 Console.WriteLine("The current state of the game is:");
                 IOManager.DisplayBoard(board);
-                players[turn].MakeMove(board);
-                if (players[turn].HasWon(board)) break;
-                Console.WriteLine("Player {0} has made a move.", players[turn].GetLetter());
-                turn = (turn + 1) % players.Length;
+
+                // have the current player make a move
+                int currPlayer = movesPlayed % players.Length;
+                players[currPlayer].MakeMove(board);
+
+                // breaks when movesPlayed <= 8 if there is a winner
+                if (players[currPlayer].HasWon(board)) break;
+
+                // output which player made a move
+                Console.WriteLine("Player {0} has made a move.", players[currPlayer].GetLetter());
+
+                // move on to the next move
                 movesPlayed++;
             }
+
+            // output current board state at the end of the game
+            Console.WriteLine("The current state of the game is:");
+            IOManager.DisplayBoard(board);
+
+            // if all moves were played without a winner, it's a draw
             if (movesPlayed == board.Length) {
                 Console.WriteLine("Game ended in a draw");
+
+            // otherwise, it's a win
             } else {
-                Console.WriteLine("Player {0} has won!", players[turn].GetLetter());
+                Console.WriteLine("Player {0} has won!", players[movesPlayed % players.Length].GetLetter());
             }
         }
+
+        // resets all properties of the game
+        // and links them (as needed) to the players
         private void Reset() {
-            turn = 0;
             board = new MoveState[9];
             posLeft = Enumerable.Range(0, 9).ToList();
             foreach (Player player in players) {

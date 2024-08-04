@@ -1,8 +1,10 @@
 namespace TicTacToe {
     class Bot : Player {
+        // what difficulty the bot is set to
         private static AIChance difficulty;
 
         // for caching
+        // i.e. to avoid creating the same object several times unnecessarily
         private static Random rnd = new Random();
 
         // constructor
@@ -29,9 +31,7 @@ namespace TicTacToe {
                     difficulty = AIChance.Impossible;
                     break;
                 default:
-                    // replace with exceptions later
-                    Console.WriteLine("Something went wrong");
-                    break;
+                    throw new UnexpectedEnumValueException("Was not provided a valid AIChance enum value.");
             }
         }
 
@@ -40,19 +40,19 @@ namespace TicTacToe {
             // random number from 1 to 100 (inclusively)
             int chance = rnd.Next(1, 101);
 
-            // if it's less than or equal to the associated constant, use AI
+            // if it's less than or equal to the associated constant, use AI i.e. minimax algo
             int index = -1;
             if (chance <= (int)difficulty) {
                 (index, int _) = MiniMax(board, 0, Int32.MinValue, Int32.MaxValue, this.GetPlayer(), this.GetPlayer());
 
             // otherwise, guess the move randomly
             } else {
-                index = GetPosLeft()[rnd.Next(GetPosLeft().Count)];
+                index = GetRandomPosLeft(rnd);
             }
 
             // applying the move
             board[index] = this.GetPlayer();
-            GetPosLeft().Remove(index);
+            PosLeftRemove(index);
 
             return board;
         }
@@ -64,7 +64,7 @@ namespace TicTacToe {
             if (HasWon(board)) {
                 // evaluate inversely proportional to depth
                 // i.e. higher depth -> lower eval, lower depth -> higher eval
-                int eval = GetPosLeft().Count + 1 - depth;
+                int eval = CountAvailablePos() + 1 - depth;
 
                 // if the current player is the initial player,
                 // it means the last move was played by the opponent so we must evaluate it negatively
@@ -73,7 +73,7 @@ namespace TicTacToe {
             }
 
             // draw
-            if (depth == GetPosLeft().Count) return (-1, 0);
+            if (depth == CountAvailablePos()) return (-1, 0);
 
             // determine who is the next player
             MoveState nextPlayer = MoveState.First;
@@ -84,23 +84,23 @@ namespace TicTacToe {
                 int move = -1;
 
                 // applying alpha-beta pruning such that it stops when beta <= alpha
-                for (int i = 0; i < GetPosLeft().Count && beta > alpha; i++) {
+                for (int i = 0; i < CountAvailablePos() && beta > alpha; i++) {
                     // skip if visited
 
-                    if (board[GetPosLeft()[i]] != MoveState.Unused) continue;
+                    if (board[GetPosition(i)] != MoveState.Unused) continue;
 
                     // set as visited
-                    board[GetPosLeft()[i]] = player;
+                    board[GetPosition(i)] = player;
 
                     // find max
                     (int _, int currEval) = MiniMax(board, depth + 1, alpha, beta, nextPlayer, initPlayer);
                     if (currEval > alpha) {
                         alpha = currEval;
-                        move = GetPosLeft()[i];
+                        move = GetPosition(i);
                     }
 
                     // set as unvisited
-                    board[GetPosLeft()[i]] = MoveState.Unused;
+                    board[GetPosition(i)] = MoveState.Unused;
                 }
                 return (move, alpha);
 
@@ -109,22 +109,22 @@ namespace TicTacToe {
                 int move = -1;
 
                 // applying alpha-beta pruning such that it stops when beta <= alpha
-                for (int i = 0; i < GetPosLeft().Count && beta > alpha; i++) {
+                for (int i = 0; i < CountAvailablePos() && beta > alpha; i++) {
                     // skip if visited
-                    if (board[GetPosLeft()[i]] != MoveState.Unused) continue;
+                    if (board[GetPosition(i)] != MoveState.Unused) continue;
 
                     // set as visited
-                    board[GetPosLeft()[i]] = player;
+                    board[GetPosition(i)] = player;
 
                     // find min
                     (int _, int currEval) = MiniMax(board, depth + 1, alpha, beta, nextPlayer, initPlayer);
                     if (currEval < beta) {
                         beta = currEval;
-                        move = GetPosLeft()[i];
+                        move = GetPosition(i);
                     }
 
                     // set as unvisited
-                    board[GetPosLeft()[i]] = MoveState.Unused;
+                    board[GetPosition(i)] = MoveState.Unused;
                 }
                 return (move, beta);
             }

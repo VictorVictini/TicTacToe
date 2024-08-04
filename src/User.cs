@@ -1,11 +1,14 @@
 namespace TicTacToe {
     class User : Player {
+        // basic constructor
         public User(MoveState player, char letter) {
             this.SetPlayer(player);
             this.SetLetter(letter);
         }
 
+        // user makes a move
         public override MoveState[] MakeMove(MoveState[] board) {
+            // get an available move
             int move = -1;
             bool found = false;
             while (!found) {
@@ -17,8 +20,10 @@ namespace TicTacToe {
                 }
             }
 
+            // play the move and remove it from the 
             board[move - 1] = this.GetPlayer();
-            GetPosLeft().Remove(move - 1);
+            PosLeftRemove(move - 1);
+
             return board;
         }
     }

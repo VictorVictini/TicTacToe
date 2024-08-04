@@ -1,6 +1,5 @@
 ﻿namespace TicTacToe {
     public class Program {
-        // program runs from here
         private static void Main() {
             // how many players -- 2 or 1
             int num = 0;
@@ -26,6 +25,9 @@
                 } catch (QuitGameException exception) {
                     Console.WriteLine(exception.Message);
                     return;
+                } catch (UnexpectedEnumValueException exception) {
+                    Console.WriteLine(exception.Message);
+                    return;
                 }
             
             // otherwise, it's a human
@@ -37,6 +39,8 @@
             Game game;
             try {
                 game = new Game(firstPlayer, secondPlayer);
+            
+            // exceptions that shouldn't execute
             } catch (EqualPlayerObjectException exception) {
                 Console.WriteLine(exception.Message);
                 return;

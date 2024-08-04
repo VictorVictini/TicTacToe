@@ -8,4 +8,7 @@ namespace TicTacToe {
     public class EqualPlayerMoveStateException : Exception {
         public EqualPlayerMoveStateException(string msg) : base(msg) { /* empty body */ }
     }
+    public class UnexpectedEnumValueException : Exception {
+        public UnexpectedEnumValueException(string msg) : base(msg) { /* empty body */ }
+    }
 }

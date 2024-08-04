@@ -3,15 +3,24 @@ namespace TicTacToe {
 
         // retrieving input from console
         private static string RetrieveInput(string msg) {
+            // outputting the message provided
             Console.WriteLine("Enter \"quit\" to end the game. {0}", msg);
+
+            // getting the input
+            // ignoring empty strings
             string input = "";
             while (input == "") {
                 Console.Write("> ");
                 input = Console.ReadLine() ?? throw new IOException("Invalid input provided");
             }
+
+            // setting it to lower case
             input = input.ToLower();
+
+            // throwing the QuitGame exception if it is provided
             if (input == "quit") throw new QuitGameException("Exiting program...");
-            return input.ToLower();
+
+            return input;
         }
 
         // parses a number from the input
@@ -32,6 +41,8 @@ namespace TicTacToe {
                     Console.WriteLine("Number outwith range ({0}-{1})", start, end);
                     continue;
                 }
+
+                // nothing went wrong, so it is valid
                 found = true;
             }
             return num;
