@@ -16,22 +16,8 @@ namespace TicTacToe {
             string choice = IOManager.RestrictedChoice("Enter the difficulty", choices);
 
             // getting the relevant difficulty set up
-            switch (choice) {
-                case "easy":
-                    difficulty = AIChance.Easy;
-                    break;
-                case "medium":
-                    difficulty = AIChance.Medium;
-                    break;
-                case "hard":
-                    difficulty = AIChance.Hard;
-                    break;
-                case "impossible":
-                    difficulty = AIChance.Impossible;
-                    break;
-                default:
-                    throw new UnexpectedEnumValueException("Was not provided a valid AIChance enum value.");
-            }
+            // or throwing an error if one did not appear
+            if (!Enum.TryParse(choice, true, out difficulty)) throw new UnexpectedEnumValueException("Was not provided a valid AIChance enum value.");
         }
 
         // making the move
